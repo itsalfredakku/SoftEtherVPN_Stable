@@ -1,4 +1,4 @@
-# iOS ARM64 Mayaqua static library Makefile for SoftEther VPN
+# iOS ARM64 SoftEther static library Makefile for SoftEther VPN
 # This builds just the Mayaqua kernel as a static library
 
 # iOS SDK Detection
@@ -19,7 +19,7 @@ HEADERS_MAYAQUA = Mayaqua/Mayaqua.h Mayaqua/MayaType.h
 OBJECTS_MAYAQUA = tmp/objs/Mayaqua/Cfg.o tmp/objs/Mayaqua/FileIO.o tmp/objs/Mayaqua/Internat.o tmp/objs/Mayaqua/Kernel.o tmp/objs/Mayaqua/Mayaqua.o tmp/objs/Mayaqua/Memory.o tmp/objs/Mayaqua/Microsoft.o tmp/objs/Mayaqua/Object.o tmp/objs/Mayaqua/OS.o tmp/objs/Mayaqua/Pack.o tmp/objs/Mayaqua/Str.o tmp/objs/Mayaqua/Table.o tmp/objs/Mayaqua/TcpIp.o tmp/objs/Mayaqua/Tick64.o tmp/objs/Mayaqua/Tracking.o tmp/objs/Mayaqua/Unix.o tmp/objs/Mayaqua/Win32.o
 
 # Main targets
-all: bin/libmayaqua_ios.a
+all: bin/libsoftether_ios.a
 
 # Directory creation
 directories:
@@ -79,26 +79,26 @@ tmp/objs/Mayaqua/Win32.o: Mayaqua/Win32.c $(HEADERS_MAYAQUA) | directories
 	$(CC) $(OPTIONS_COMPILE) -c Mayaqua/Win32.c -o tmp/objs/Mayaqua/Win32.o
 
 # Create static library
-bin/libmayaqua_ios.a: $(OBJECTS_MAYAQUA) | directories
-	$(AR) rcs bin/libmayaqua_ios.a $(OBJECTS_MAYAQUA)
-	@echo "iOS Mayaqua static library created: bin/libmayaqua_ios.a"
+bin/libsoftether_ios.a: $(OBJECTS_MAYAQUA) | directories
+	$(AR) rcs bin/libsoftether_ios.a $(OBJECTS_MAYAQUA)
+	@echo "iOS SoftEther static library created: bin/libsoftether_ios.a"
 	@echo "This library can be linked into iOS apps that need SoftEther VPN functionality"
 
 # Clean
 clean:
 	rm -rf tmp/objs
-	rm -rf bin/libmayaqua_ios.a
+	rm -rf bin/libsoftether_ios.a
 
 # Help
 help:
-	@echo "SoftEther VPN Mayaqua Library for iOS ARM64"
+	@echo "SoftEther VPN Library for iOS ARM64"
 	@echo ""
 	@echo "Usage:"
-	@echo "  make -f makefiles/ios_mayaqua_lib.mak          - Build Mayaqua static library"
-	@echo "  make -f makefiles/ios_mayaqua_lib.mak clean    - Clean build files"
-	@echo "  make -f makefiles/ios_mayaqua_lib.mak help     - Show this help"
+	@echo "  make -f makefiles/ios_softether_lib.mak          - Build SoftEther static library"
+	@echo "  make -f makefiles/ios_softether_lib.mak clean    - Clean build files"
+	@echo "  make -f makefiles/ios_softether_lib.mak help     - Show this help"
 	@echo ""
 	@echo "Output:"
-	@echo "  bin/libmayaqua_ios.a - iOS ARM64 static library"
+	@echo "  bin/libsoftether_ios.a - iOS ARM64 static library"
 
 .PHONY: all clean help directories

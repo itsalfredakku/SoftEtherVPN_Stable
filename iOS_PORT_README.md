@@ -4,23 +4,23 @@
 Successfully ported SoftEther VPN's core Mayaqua library to iOS ARM64 architecture. This project focused on creating a functional static library rather than a full VPN client, providing the foundation for iOS VPN app development.
 
 ## What Was Successfully Built
-- **iOS ARM64 Static Library**: `src/bin/libmayaqua_ios.a` (565KB)
+- **iOS ARM64 Static Library**: `src/bin/libsoftether_ios.a` (565KB)
 - **Target Platform**: iOS 12.0+ on ARM64 architecture  
 - **Status**: ✅ **SUCCESSFULLY COMPILED AND VERIFIED**
 
 ## Architecture Verification
 ```bash
-$ lipo -info src/bin/libmayaqua_ios.a
-Non-fat file: src/bin/libmayaqua_ios.a is architecture: arm64
+$ lipo -info src/bin/libsoftether_ios.a
+Non-fat file: src/bin/libsoftether_ios.a is architecture: arm64
 
-$ file src/bin/libmayaqua_ios.a
-src/bin/libmayaqua_ios.a: current ar archive random library
+$ file src/bin/libsoftether_ios.a
+src/bin/libsoftether_ios.a: current ar archive random library
 ```
 
 ## Build System Created
 
 ### Working Makefile
-- **File**: `makefiles/ios_mayaqua_lib.mak`
+- **File**: `makefiles/ios_softether_lib.mak`
 - **Purpose**: Builds iOS ARM64 static library with proper SDK targeting
 - **Dependencies**: iOS SDK 18.4+, Xcode command line tools
 - **Status**: ✅ Fully functional
@@ -28,9 +28,9 @@ src/bin/libmayaqua_ios.a: current ar archive random library
 ### Build Command
 ```bash
 cd src
-make -f makefiles/ios_mayaqua_lib.mak clean
-make -f makefiles/ios_mayaqua_lib.mak
-# Output: bin/libmayaqua_ios.a
+make -f makefiles/ios_softether_lib.mak clean
+make -f makefiles/ios_softether_lib.mak
+# Output: bin/libsoftether_ios.a
 ```
 
 ## Successful Code Modifications
@@ -81,9 +81,9 @@ Successfully eliminated problematic dependencies:
 - **Result**: No external dependencies required for core library
 
 ## iOS Integration Guide
-To use `libmayaqua_ios.a` in an iOS project:
+To use `libsoftether_ios.a` in an iOS project:
 
-1. **Add to Project**: Drag `libmayaqua_ios.a` into iOS project
+1. **Add to Project**: Drag `libsoftether_ios.a` into iOS project
 2. **Headers**: Add `Mayaqua/` directory to header search paths  
 3. **System Frameworks**: Link `libiconv` and `libz`
 4. **Initialize**: Call `InitMayaqua()` before using library functions
@@ -101,8 +101,8 @@ To use `libmayaqua_ios.a` in an iOS project:
 - ❌ `tmp/objs/*` - Cleaned all build artifacts
 
 ### Files Retained (Working Components)
-- ✅ `makefiles/ios_mayaqua_lib.mak` - Working iOS makefile
-- ✅ `src/bin/libmayaqua_ios.a` - Compiled static library
+- ✅ `makefiles/ios_softether_lib.mak` - Working iOS makefile
+- ✅ `src/bin/libsoftether_ios.a` - Compiled static library
 - ✅ `.gitignore` - Comprehensive repository management
 - ✅ All source code modifications in Mayaqua/ and Cedar/
 
