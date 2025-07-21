@@ -20,7 +20,7 @@ src/bin/libsoftether_ios.a: current ar archive random library
 ## Build System Created
 
 ### Working Makefile
-- **File**: `makefiles/ios_softether_lib.mak`
+- **File**: `makefiles/ios_arm64.mak`
 - **Purpose**: Builds iOS ARM64 static library with proper SDK targeting
 - **Dependencies**: iOS SDK 18.4+, Xcode command line tools
 - **Status**: ✅ Fully functional
@@ -28,8 +28,8 @@ src/bin/libsoftether_ios.a: current ar archive random library
 ### Build Command
 ```bash
 cd src
-make -f makefiles/ios_softether_lib.mak clean
-make -f makefiles/ios_softether_lib.mak
+make -f makefiles/ios_arm64.mak clean
+make -f makefiles/ios_arm64.mak
 # Output: bin/libsoftether_ios.a
 ```
 
@@ -101,7 +101,7 @@ To use `libsoftether_ios.a` in an iOS project:
 - ❌ `tmp/objs/*` - Cleaned all build artifacts
 
 ### Files Retained (Working Components)
-- ✅ `makefiles/ios_softether_lib.mak` - Working iOS makefile
+- ✅ `makefiles/ios_arm64.mak` - Working iOS makefile
 - ✅ `src/bin/libsoftether_ios.a` - Compiled static library
 - ✅ `.gitignore` - Comprehensive repository management
 - ✅ All source code modifications in Mayaqua/ and Cedar/
