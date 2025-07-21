@@ -89,17 +89,6 @@ To use `libsoftether_ios.a` in an iOS project:
 4. **Initialize**: Call `InitMayaqua()` before using library functions
 5. **Cleanup**: Call `FreeMayaqua()` when done
 
-## Repository Cleanup Completed
-
-### Files Removed (No Longer Needed)
-- ❌ `ios_stubs.c` - Removed unsuccessful stub approach
-- ❌ `ios_stubs_fixed.c` - Removed failed stub fixes
-- ❌ `ios_stubs_new.c` - Removed alternative stub attempt
-- ❌ `makefiles/ios_arm64_client_minimal.mak` - Removed failed client build
-- ❌ `makefiles/ios_arm64_client.mak` - Removed complex client build
-- ❌ `build_ios.sh` - Removed unused build script
-- ❌ `tmp/objs/*` - Cleaned all build artifacts
-
 ### Files Retained (Working Components)
 - ✅ `makefiles/ios_arm64.mak` - Working iOS makefile
 - ✅ `src/bin/libsoftether_ios.a` - Compiled static library
