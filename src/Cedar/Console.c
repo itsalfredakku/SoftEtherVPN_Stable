@@ -2039,7 +2039,11 @@ bool PasswordPrompt(char *password, UINT size)
 		else if (c == 0xE0)
 		{
 			// Read one more character
+#ifndef UNIX_IOS
 			c = getch();
+#else
+			c = getchar(); // iOS fallback
+#endif
 			if (c == 0x4B || c == 0x53)
 			{
 				// Backspace
@@ -2104,6 +2108,7 @@ wchar_t *Prompt(wchar_t *prompt_str)
 	}
 	Free(tmp);
 #else	// OS_WIN32
+#ifndef NO_READLINE
 	{
 		char *prompt = CopyUniToStr(prompt_str);
 		char *s = readline(prompt);
@@ -2124,6 +2129,23 @@ wchar_t *Prompt(wchar_t *prompt_str)
 			free(s);
 		}
 	}
+#else // NO_READLINE
+	// Fallback implementation for iOS and other platforms without readline
+	{
+		char *prompt = CopyUniToStr(prompt_str);
+		char tmp_input[8192];
+		
+		printf("%s", prompt);
+		Free(prompt);
+		
+		if (fgets(tmp_input, sizeof(tmp_input) - 1, stdin) != NULL)
+		{
+			TrimCrlf(tmp_input);
+			Trim(tmp_input);
+			ret = CopyStrToUni(tmp_input);
+		}
+	}
+#endif // NO_READLINE
 #endif	// OS_WIN32
 
 	if (ret == NULL)

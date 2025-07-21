@@ -118,6 +118,7 @@
 #include <stdarg.h>
 #include <time.h>
 #include <errno.h>
+#ifndef NO_OPENSSL
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
@@ -129,6 +130,7 @@
 #include <openssl/rc4.h>
 #include <openssl/md5.h>
 #include <openssl/sha.h>
+#endif // NO_OPENSSL
 #include <Mayaqua/Mayaqua.h>
 #include <Mayaqua/cryptoki.h>
 

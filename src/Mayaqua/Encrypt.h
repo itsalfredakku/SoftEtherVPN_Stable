@@ -243,6 +243,7 @@ void RAND_Free_For_SoftEther();
 // Macro
 #define	HASHED_DATA(p)			(((UCHAR *)p) + 15)
 
+#ifndef NO_OPENSSL
 // OpenSSL <1.1 Shims
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
 #	define EVP_PKEY_get0_RSA(obj) ((obj)->pkey.rsa)
@@ -251,6 +252,7 @@ void RAND_Free_For_SoftEther();
 #	define X509_get0_notAfter(x509) ((x509)->cert_info->validity->notAfter)
 #	define X509_get_serialNumber(x509) ((x509)->cert_info->serialNumber)
 #endif
+#endif // NO_OPENSSL
 
 // Crypt context
 struct CRYPT
@@ -279,7 +281,11 @@ struct X_SERIAL
 // Certificate
 struct X
 {
+#ifndef NO_OPENSSL
 	X509 *x509;
+#else
+	void *x509;  // Placeholder for iOS
+#endif
 	NAME *issuer_name;
 	NAME *subject_name;
 	bool root_cert;
@@ -296,20 +302,32 @@ struct X
 // Key
 struct K
 {
+#ifndef NO_OPENSSL
 	EVP_PKEY *pkey;
+#else
+	void *pkey;  // Placeholder for iOS
+#endif
 	bool private_key;
 };
 
 // PKCS#12
 struct P12
 {
+#ifndef NO_OPENSSL
 	PKCS12 *pkcs12;
+#else
+	void *pkcs12;  // Placeholder for iOS
+#endif
 };
 
 // CEL
 struct X_CRL
 {
+#ifndef NO_OPENSSL
 	X509_CRL *Crl;
+#else
+	void *Crl;  // Placeholder for iOS
+#endif
 };
 
 // Constant
@@ -442,25 +460,37 @@ LIST* BufToXList(BUF* b);
 void FreeXList(LIST* o);
 
 void CertTest();
+#ifndef NO_OPENSSL
 BIO *BufToBio(BUF *b);
 BUF *BioToBuf(BIO *bio);
 BIO *NewBio();
 void FreeBio(BIO *bio);
 X *BioToX(BIO *bio, bool text);
+#endif // NO_OPENSSL
 X *BufToX(BUF *b, bool text);
 BUF *SkipBufBeforeString(BUF *b, char *str);
+#ifndef NO_OPENSSL
 void FreeX509(X509 *x509);
+#endif // NO_OPENSSL
 void FreeX(X *x);
+#ifndef NO_OPENSSL
 BIO *XToBio(X *x, bool text);
+#endif // NO_OPENSSL
 BUF *XToBuf(X *x, bool text);
+#ifndef NO_OPENSSL
 K *BioToK(BIO *bio, bool private_key, bool text, char *password);
+#endif // NO_OPENSSL
 int PKeyPasswordCallbackFunction(char *buf, int bufsize, int verify, void *param);
+#ifndef NO_OPENSSL
 void FreePKey(EVP_PKEY *pkey);
+#endif // NO_OPENSSL
 void FreeK(K *k);
 K *BufToK(BUF *b, bool private_key, bool text, char *password);
 bool IsEncryptedK(BUF *b, bool private_key);
 bool IsBase64(BUF *b);
+#ifndef NO_OPENSSL
 BIO *KToBio(K *k, bool text, char *password);
+#endif // NO_OPENSSL
 BUF *KToBuf(K *k, bool text, char *password);
 X *FileToX(char *filename);
 X *FileToXW(wchar_t *filename);
@@ -480,7 +510,9 @@ void FreeName(NAME *n);
 bool CompareName(NAME *n1, NAME *n2);
 K *GetKFromX(X *x);
 bool CheckSignature(X *x, K *k);
+#ifndef NO_OPENSSL
 X *X509ToX(X509 *x509);
+#endif // NO_OPENSSL
 bool CheckX(X *x, X *x_issuer);
 bool CheckXEx(X *x, X *x_issuer, bool check_name, bool check_date);
 bool Asn1TimeToSystem(SYSTEMTIME *s, void *asn1_time);
@@ -497,10 +529,14 @@ NAME *NewName(wchar_t *common_name, wchar_t *organization, wchar_t *unit,
 void *NameToX509Name(NAME *nm);
 void FreeX509Name(void *xn);
 bool AddX509Name(void *xn, int nid, wchar_t *str);
+#ifndef NO_OPENSSL
 X509 *NewRootX509(K *pub, K *priv, NAME *name, UINT days, X_SERIAL *serial);
+#endif // NO_OPENSSL
 X *NewRootX(K *pub, K *priv, NAME *name, UINT days, X_SERIAL *serial);
+#ifndef NO_OPENSSL
 X509 *NewX509(K *pub, K *priv, X *ca, NAME *name, UINT days, X_SERIAL *serial);
 X509 *NewX509Ex(K *pub, K *priv, X *ca, NAME *name, UINT days, X_SERIAL *serial, NAME *name_issuer);
+#endif // NO_OPENSSL
 X *NewX(K *pub, K *priv, X *ca, NAME *name, UINT days, X_SERIAL *serial);
 X *NewXEx(K *pub, K *priv, X *ca, NAME *name, UINT days, X_SERIAL *serial, NAME *name_issuer);
 UINT GetDaysUntil2038();
@@ -508,12 +544,18 @@ UINT GetDaysUntil2038Ex();
 X_SERIAL *NewXSerial(void *data, UINT size);
 void FreeXSerial(X_SERIAL *serial);
 char *ByteToStr(BYTE *src, UINT src_size);
+#ifndef NO_OPENSSL
 P12 *BioToP12(BIO *bio);
 P12 *PKCS12ToP12(PKCS12 *pkcs12);
+#endif // NO_OPENSSL
 P12 *BufToP12(BUF *b);
+#ifndef NO_OPENSSL
 BIO *P12ToBio(P12 *p12);
+#endif // NO_OPENSSL
 BUF *P12ToBuf(P12 *p12);
+#ifndef NO_OPENSSL
 void FreePKCS12(PKCS12 *pkcs12);
+#endif // NO_OPENSSL
 void FreeP12(P12 *p12);
 P12 *FileToP12(char *filename);
 P12 *FileToP12W(wchar_t *filename);
@@ -536,10 +578,12 @@ void GetAllNameFromName(wchar_t *str, UINT size, NAME *name);
 void GetAllNameFromNameEx(wchar_t *str, UINT size, NAME *name);
 void GetAllNameFromXEx(wchar_t *str, UINT size, X *x);
 void GetAllNameFromXExA(char *str, UINT size, X *x);
+#ifndef NO_OPENSSL
 BUF *BigNumToBuf(const BIGNUM *bn);
 BIGNUM *BinToBigNum(void *data, UINT size);
 BIGNUM *BufToBigNum(BUF *b);
 char *BigNumToStr(BIGNUM *bn);
+#endif // NO_OPENSSL
 X_SERIAL *CloneXSerial(X_SERIAL *src);
 bool CompareXSerial(X_SERIAL *s1, X_SERIAL *s2);
 void GetXDigest(X *x, UCHAR *buf, bool sha1);

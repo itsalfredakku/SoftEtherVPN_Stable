@@ -115,6 +115,7 @@
 #include <stdarg.h>
 #include <time.h>
 #include <errno.h>
+#ifndef NO_OPENSSL
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
@@ -133,12 +134,20 @@
 #include <openssl/dh.h>
 #include <openssl/pem.h>
 #include <openssl/conf.h>
+#else
+// iOS fallback - use CommonCrypto
+#ifdef __APPLE__
+#include <CommonCrypto/CommonCrypto.h>
+#endif
+#endif // NO_OPENSSL
+#ifndef NO_OPENSSL
 #include <openssl/x509v3.h>
 #include <openssl/ocsp.h>
 #include <openssl/ocsperr.h>
 #if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/provider.h>
 #endif // OPENSSL_VERSION_NUMBER
+#endif // NO_OPENSSL
 
 #include <Mayaqua/Mayaqua.h>
 
@@ -146,6 +155,7 @@
 #include <intelaes/iaesni.h>
 #endif	// USE_INTEL_AESNI_LIBRARY
 
+#ifndef NO_OPENSSL
 LOCK *openssl_lock = NULL;
 
 int ssl_clientcert_index = 0;
@@ -153,6 +163,8 @@ int ssl_clientcert_index = 0;
 LOCK **ssl_lock_obj = NULL;
 UINT ssl_lock_num;
 static bool openssl_inited = false;
+#endif // NO_OPENSSL
+
 static bool is_intel_aes_supported = false;
 
 #if OPENSSL_VERSION_NUMBER >= 0x30000000L
@@ -821,7 +833,9 @@ void FreeXCrl(X_CRL *r)
 		return;
 	}
 
+#ifndef NO_OPENSSL
 	X509_CRL_free(r->Crl);
+#endif // NO_OPENSSL
 
 	Free(r);
 }

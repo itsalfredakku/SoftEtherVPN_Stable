@@ -121,7 +121,9 @@
 
 #endif	// VPN_SPEED
 
+#ifndef UNIX_IOS
 #define	bool	UINT
+#endif // UNIX_IOS
 #define	BOOL	UINT
 
 

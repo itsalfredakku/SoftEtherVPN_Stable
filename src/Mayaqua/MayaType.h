@@ -258,11 +258,11 @@ typedef	unsigned int		BOOL;
 #endif	// WINDOWS_H
 
 // bool type
-#ifndef	WIN32COM_CPP
+#if !defined(WIN32COM_CPP) && !defined(UNIX_IOS)
 typedef	unsigned int		bool;
 #define	true				1
 #define	false				0
-#endif	// WIN32COM_CPP
+#endif	// WIN32COM_CPP && !UNIX_IOS
 
 // 32bit integer type
 #ifndef	WINDOWS_H

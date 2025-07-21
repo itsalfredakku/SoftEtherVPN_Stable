@@ -591,7 +591,9 @@ IPTABLES_STATE *StartAddIpTablesEntryForNativeStack(void *seed, UINT seed_size)
 						"iptables -D %s %s",
 						e->Chain, e->ConditionAndArgs);
 
+#ifndef UNIX_IOS
 					system(cmdline);
+#endif
 				}
 				else
 				{
@@ -607,7 +609,9 @@ IPTABLES_STATE *StartAddIpTablesEntryForNativeStack(void *seed, UINT seed_size)
 					"iptables -I %s %s",
 					e->Chain, e->ConditionAndArgs);
 
+#ifndef UNIX_IOS
 				system(cmdline);
+#endif
 
 				if (GetCurrentIpTableLineNumber(e->Chain, &e->DummySrcIp, &e->DummyDestIP, e->DummyMark) == 0)
 				{
@@ -660,7 +664,9 @@ bool MaintainAddIpTablesEntryForNativeStack(IPTABLES_STATE *s)
 				"iptables -I %s %s",
 				e->Chain, e->ConditionAndArgs);
 
+#ifndef UNIX_IOS
 			system(cmdline);
+#endif
 
 			if (GetCurrentIpTableLineNumber(e->Chain, &e->DummySrcIp, &e->DummyDestIP, e->DummyMark) == 0)
 			{
@@ -704,7 +710,9 @@ void EndAddIpTablesEntryForNativeStack(IPTABLES_STATE *s)
 					"iptables -D %s %s",
 					e->Chain, e->ConditionAndArgs);
 
+#ifndef UNIX_IOS
 				system(cmdline);
+#endif
 			}
 			else
 			{

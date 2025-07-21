@@ -152,6 +152,9 @@ int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrev, char *CmdLine, int CmdShow)
 #define	OS_WIN32		// Microsoft Windows
 #else
 #define	OS_UNIX			// UNIX
+#ifdef	UNIX_IOS
+#define	OS_IOS			// iOS
+#endif	// UNIX_IOS
 #endif	// WIN32
 
 // Directory separator
@@ -229,9 +232,11 @@ int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrev, char *CmdLine, int CmdShow)
 #ifdef	OS_UNIX
 #ifndef	UNIX_SOLARIS
 #ifndef	CPU_SH4
-// Getifaddrs system call is supported on UNIX other than Solaris.
+#ifndef	UNIX_IOS
+// Getifaddrs system call is supported on UNIX other than Solaris and iOS.
 // However, it is not supported also by the Linux on SH4 CPU
 #define	MAYAQUA_SUPPORTS_GETIFADDRS
+#endif	// UNIX_IOS
 #endif	// CPU_SH4
 #endif	// UNIX_SOLARIS
 #endif	// OS_UNIX
@@ -275,9 +280,13 @@ int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrev, char *CmdLine, int CmdShow)
 //#include <netinet/ip.h>
 #include <netdb.h>
 #include <net/if.h>
+#ifndef UNIX_IOS
 #include <net/if_arp.h>
+#endif // UNIX_IOS
+#ifndef NO_READLINE
 #include <readline/readline.h>
 #include <readline/history.h>
+#endif // NO_READLINE
 //#include <curses.h>
 #ifdef	MAYAQUA_SUPPORTS_GETIFADDRS
 #include <ifaddrs.h>
@@ -329,6 +338,11 @@ int iconv_close (iconv_t __cd);
 #define	NO_IPV6
 #endif	// AF_INET6
 #endif	// WIN32
+
+// iOS bool support
+#ifdef UNIX_IOS
+#include <stdbool.h>
+#endif // UNIX_IOS
 
 // Basic type declaration
 #include <Mayaqua/MayaType.h>

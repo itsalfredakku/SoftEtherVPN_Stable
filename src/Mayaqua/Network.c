@@ -133,6 +133,7 @@
 #include <wchar.h>
 #include <stdarg.h>
 #include <time.h>
+#ifndef NO_OPENSSL
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
@@ -144,6 +145,7 @@
 #include <openssl/rc4.h>
 #include <openssl/md5.h>
 #include <openssl/sha.h>
+#endif // NO_OPENSSL
 #include <Mayaqua/Mayaqua.h>
 #ifdef	UNIX_MACOS
 #include <sys/event.h>
@@ -443,6 +445,7 @@ static LIST *g_dyn_value_list = NULL;
 
 
 // DH temp key callback
+#ifndef NO_OPENSSL
 DH* TmpDhCallback(SSL* ssl, int is_export, int keylength)
 {
 	DH* ret = NULL;
@@ -454,6 +457,7 @@ DH* TmpDhCallback(SSL* ssl, int is_export, int keylength)
 
 	return ret;
 }
+#endif // NO_OPENSSL
 
 
 
@@ -6145,6 +6149,7 @@ SOCK *ListenAnyPortEx2(bool local_only, bool disable_ca)
 	return NULL;
 }
 
+#ifndef NO_OPENSSL
 int cb_test(int a, X509_STORE_CTX *ctx)
 {
 	WHERE;
@@ -6196,6 +6201,7 @@ int SslCertVerifyCallback(int preverify_ok, X509_STORE_CTX *ctx)
 
 	return 1; /* allow the verification process to continue */
 }
+#endif // NO_OPENSSL
 
 // Create a new SSL pipe
 SSL_PIPE *NewSslPipe(bool server_mode, X *x, K *k, DH_CTX *dh)

@@ -309,9 +309,9 @@ OS_DISPATCH_TABLE *UnixGetDispatchTable()
 	return &t;
 }
 
-static void *signal_received_for_ignore(int sig, siginfo_t *info, void *ucontext) 
+static void signal_received_for_ignore(int sig, siginfo_t *info, void *ucontext) 
 {
-	return NULL;
+	// Do nothing
 }
 
 // Ignore the signal flew to the thread
@@ -564,7 +564,7 @@ bool UnixGetDiskFree(char *path, UINT64 *free_size, UINT64 *used_size, UINT64 *t
 }
 bool UnixGetDiskFreeMain(char *path, UINT64 *free_size, UINT64 *used_size, UINT64 *total_size)
 {
-#ifndef	USE_STATVFS
+#if !defined(USE_STATVFS) && !defined(UNIX_IOS)
 	struct statfs st;
 	char tmp[MAX_PATH];
 	UINT64 v1 = 0, v2 = 0;
@@ -601,6 +601,12 @@ bool UnixGetDiskFreeMain(char *path, UINT64 *free_size, UINT64 *used_size, UINT6
 	}
 
 	return ret;
+#elif defined(UNIX_IOS)
+	// iOS fallback - return dummy values since disk access is restricted
+	if (free_size != NULL) *free_size = 1024ULL * 1024ULL * 1024ULL; // 1GB
+	if (total_size != NULL) *total_size = 8ULL * 1024ULL * 1024ULL * 1024ULL; // 8GB
+	if (used_size != NULL) *used_size = 7ULL * 1024ULL * 1024ULL * 1024ULL; // 7GB
+	return true;
 #else	// USE_STATVFS
 	struct statvfs st;
 	char tmp[MAX_PATH];
@@ -2722,7 +2728,9 @@ void UnixStopService(char *name)
 			Format(tmp, sizeof(tmp), "killall -KILL %s", name);
 
 			UniPrint(_UU("UNIX_SVC_STOP_FAILED"), svc_title);
+#ifndef UNIX_IOS
 			system(tmp);
+#endif // UNIX_IOS
 		}
 	}
 

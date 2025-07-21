@@ -252,11 +252,18 @@ struct SOCK
 {
 	REF *ref;					// Reference counter
 	LOCK *lock;					// Lock
+#ifndef NO_OPENSSL
 	LOCK *ssl_lock;				// Lock related to the SSL
+#endif
 	LOCK *disconnect_lock;		// Disconnection lock
 	SOCKET socket;				// Socket number
+#ifndef NO_OPENSSL
 	SSL *ssl;					// SSL object
 	SSL_CTX_SHARED* ssl_ctx_shared;	// SSL context shared object
+#else
+	void *ssl;					// SSL object placeholder
+	void* ssl_ctx_shared;		// SSL context shared object placeholder
+#endif
 	char SniHostname[256];		// SNI host name
 	UINT Type;					// Type of socket
 	bool Connected;				// Connecting flag
@@ -627,6 +634,7 @@ struct INTERRUPT_MANAGER
 	LIST *TickList;						// Time list
 };
 
+#ifndef NO_OPENSSL
 // SSL BIO
 struct SSL_BIO
 {
@@ -647,6 +655,7 @@ struct SSL_PIPE
 	SSL_BIO *SslInOut;					// I/O BIO for the data in the SSL tunnel
 	SSL_BIO *RawIn, *RawOut;			// Input and output BIO of the data flowing through the physical network
 };
+#endif // NO_OPENSSL
 
 // IP address block list
 struct IPBLOCK
@@ -1079,6 +1088,7 @@ struct ACCESS
 
 #define SSL_CTX_SHARED_LIFETIME_DEFAULT_MSECS	(5 * 1000)
 
+#ifndef NO_OPENSSL
 struct SSL_CTX_SHARED
 {
 	REF* Ref;
@@ -1088,6 +1098,7 @@ struct SSL_CTX_SHARED
 	UINT64 Expires;
 	UINT64 SettingsHash;
 };
+#endif // NO_OPENSSL
 
 struct SSL_CTX_SHARED_SETTINGS2
 {
@@ -1428,9 +1439,11 @@ bool StartSSLEx2(SOCK* sock, X* x, K* priv, bool client_tls, UINT ssl_timeout, c
 				 CERTS_AND_KEY** certs_and_key_lists, UINT num_certs_and_key_lists, void* certs_and_key_cb_param,
 				 bool save_local_x);
 bool StartSSLWithSettings(SOCK* sock, UINT ssl_timeout, char* sni_hostname, SSL_CTX_SHARED_SETTINGS* settings);
+#ifndef NO_OPENSSL
 bool AddChainSslCert(struct ssl_st *ssl, X *x);
 bool AddChainSslCtxCert(struct ssl_ctx_st* ctx, X* x);
 void AddChainSslCertOnDirectory(struct ssl_ctx_st *ctx);
+#endif // NO_OPENSSL
 LIST* GetChainSslCertListOnDirectory();
 bool SendAll(SOCK *sock, void *data, UINT size, bool secure);
 void SendAdd(SOCK *sock, void *data, UINT size);
